@@ -1,0 +1,47 @@
+  
+{% extends "books/base.html" %}
+{% block content %}
+<h3>Search</h3>
+<hr>
+<form>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputCity">Book</label>
+      <input type="text" class="form-control" id="inputCity">
+    </div>
+    <div class="col-md"></div>
+    <div class="form-group col-md-4">
+      <label for="inputState">Year</label>
+      <select id="inputState" class="form-control">
+        <option selected>Choose...</option>
+        <option>...</option>
+      </select>
+    </div>
+  </div>
+</form>
+<div class="table-responsive">
+    <table class="table table-hover">
+    <caption>List of books</caption>
+    <thead class="thead-dark">
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">ISBN</th>
+        <th scope="col">Title</th>
+        <th scope="col">Published Date</th>
+        <th scope="col">Publisher</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ book.isbn}}</td>
+        <td>{{ book.title}}</td>
+        <td>{{ book.published_date}}</td>
+        <td>{{ book.publisher_id}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+{% endblock content %}

@@ -25,12 +25,14 @@ SECRET_KEY = 's6yi9i%g5pr38d*wxgw=57mrvml^x3b*vvzx70l58+(n^wm&9x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['arcane-sands-22384.herokuapp.com']
+ALLOWED_HOSTS = ['arcane-sands-22384.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'books.apps.BooksConfig',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
