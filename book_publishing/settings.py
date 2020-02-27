@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['arcane-sands-22384.herokuapp.com', '127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     'books.apps.BooksConfig',
+    'users.apps.UsersConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -125,3 +126,8 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = 'book-home'
+LOGIN_URL = 'login'
