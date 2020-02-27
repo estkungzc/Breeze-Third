@@ -1,4 +1,4 @@
-body {
+/* body {
     background: #fafafa;
     color: #333333;
     margin-top: 5rem;
@@ -16,7 +16,7 @@ body {
     background-color: #061C23;
   }
   
-  /* .site-header .navbar-nav .nav-link {
+  .site-header .navbar-nav .nav-link {
     color: #cbd5db;
   }
   
@@ -26,7 +26,7 @@ body {
   
   .site-header .navbar-nav .nav-link.active {
     font-weight: 500;
-  } */
+  }
   
   .content-section {
     background: #ffffff;
@@ -81,4 +81,4 @@ body {
   
   .account-heading {
     font-size: 2.5rem;
-  }
+  } */
