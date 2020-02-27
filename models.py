@@ -11,7 +11,7 @@ class Publisher(models.Model):
     name = models.CharField(primary_key=True, max_length=200)  # Field name made lowercase.
     address = models.TextField(blank=True, null=True)  # Field name made lowercase.
     phone = models.CharField(max_length=20)  # Field name made lowercase.
-Authoe
+
     def __str__(self):
         return self.name
 
