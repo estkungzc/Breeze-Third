@@ -12,6 +12,7 @@
   </legend>
   <form
     method="POST"
+    action="/"
     class="collapse multi-collapse"
     id="insertCollapse"
   >
@@ -26,32 +27,16 @@
 </div>
 <div class="content-section">
   <legend class="border-bottom mb-4">Search</legend>
-  {% comment %} <form>
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputCity">Title</label>
-        <input type="text" class="form-control" id="inputCity" />
-      </div>
-      <div class="col-md"></div>
-      <div class="form-group col-md-4">
-        <label for="inputState">Year</label>
-        <select id="inputState" class="form-control">
-          <option selected>Choose...</option>
-          <option>...</option>
-        </select>
-      </div>
-    </div>
-  </form> {% endcomment %}
-    <form action= "{% url 'books:search' %}" method="post">
+    <form action= "{% url 'books:search-book' %}" method="post">
       {% csrf_token %}
       <div class="form-row">
       <div class="form-group col-md-6">
         <label for="name">Book :</label>
-        <input type="text" class="form-control" name="name">   {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <input type="text" class="form-control" name="name">
       </div>     
       <div class="form-group col-md-4"> 
       <label for="year">Year :</label>
-      <input type="text" class="form-control" name="year">   {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      <input type="text" class="form-control" name="year">
       </div> 
       <div class="form-group col-md-2">
       <label>: </label>
@@ -69,7 +54,7 @@
           <th scope="col">Published Date</th>
           <th scope="col">Publisher</th>
           {% if user.is_authenticated %}
-            <th scope="col"></th>
+            <th scope="col">Extra Option</th>
           {% endif %}
         </tr>
       </thead>
