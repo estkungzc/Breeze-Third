@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'book_publishing.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'book_pub',
+        'NAME': 'bookdb',
         'USER': 'admin_mnk@mybookdatabase',
         'PASSWORD': '#Patt1994',
         'HOST': 'mybookdatabase.mariadb.database.azure.com',
@@ -129,5 +129,5 @@ STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'book-home'
+LOGIN_REDIRECT_URL = 'book-list'
 LOGIN_URL = 'login'
