@@ -18,6 +18,8 @@ class Author(models.Model):
 
     works_for = models.ManyToManyField(Publisher, related_name='authors')
 
+    def __str__(self):
+        return self.author_name
     class Meta:
         managed = True
         db_table = 'author'
@@ -31,6 +33,8 @@ class Book(models.Model):
 
     written = models.ManyToManyField(Author, related_name='books')
 
+    def __str__(self):
+        return f'{self.isbn} {self.title}'
     class Meta:
         managed = True
         db_table = 'book'

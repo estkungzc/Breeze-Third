@@ -25,23 +25,42 @@
     <thead class="thead-dark">
         <tr>
         <th scope="col">#</th>
-        <th scope="col">ISBN</th>
-        <th scope="col">Title</th>
-        <th scope="col">Published Date</th>
-        <th scope="col">Publisher</th>
+        <th scope="col">Name</th>
+        <th scope="col">Adress</th>
+        <th scope="col">Phone</th>
         </tr>
     </thead>
     <tbody>
-        {% for book in books %}
+        {% for publisher in publishers %}
         <tr>
         <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ book.isbn}}</td>
-        <td>{{ book.title}}</td>
-        <td>{{ book.published_date}}</td>
-        <td>{{ book.publisher_id}}</td>
+        <td>{{ publisher.name}}</td>
+        <td>{{ publisher.address}}</td>
+        <td>{{ publisher.phone}}</td>
         </tr>
         {% endfor %}
     </tbody>
     </table>
+{% if publishers.has_other_pages %}
+  <ul class="pagination">
+    {% if publishers.has_previous %}
+      <li><a href="?page={{ publishers.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in publishers.paginator.page_range %}
+      {% if publishers.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if publishers.has_next %}
+      <li><a href="?page={{ publishers.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
 </div>
 {% endblock content %}
