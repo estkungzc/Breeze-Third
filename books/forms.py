@@ -11,6 +11,7 @@ class BookForm(forms.ModelForm):
 
 
 class AuthorForm(forms.ModelForm):
+    date_of_birth = forms.DateField(initial=datetime.date.today)
     class Meta:
         model = Author
         fields = '__all__'

@@ -6,8 +6,9 @@ from .views import (
 app_name='books'
 
 urlpatterns = [
-    path('', views.book, name='book-list'),
-    path('book/<str:pk>/update/', BookUpdateView.as_view(), name='post-update'),
+    path('', views.home, name='book-home'),
+    path('book', views.book, name='book-list'),
+    path('<str:state>/insert/', views.insert, name='insert'),
     path('author', views.author, name='book-author'),
     path('publisher', views.publisher, name='book-publisher'),
     path('search-book', views.search_books, name='search-book'),

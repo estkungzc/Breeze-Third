@@ -13,29 +13,42 @@ from django.views.generic import (
     DeleteView
 )
 
+def home(request):
+    context = {
+        'title': 'Home',
+    }
+    return render(request, 'books/book_home.html', context)
+
 def book(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
+    form = BookForm()
+    book_list = Book.objects.all()
+    books = _get_object_paginator(request, book_list)
+
+    context = {
+        'books': books,
+        'title': 'Book',
+        'form': form
+    }
+    return render(request, 'books/book_list.html', context)
+
+
+def insert(request, state):
+    if request.method != 'POST':
+        return redirect(f'/{state}')
+
+    if state == "book":
         form = BookForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            form.save()
-            isbn = form.cleaned_data.get('isbn')
-            title = form.cleaned_data.get('title')
-            messages.success(request, f'Book: {title} has been created!')
-            return redirect('/')
+    elif state == "author":
+        form = AuthorForm(request.POST)
+    elif state == "publisher":
+        form = PublisherForm(request.POST)
+    
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Insert Success')
     else:
-        form = BookForm()
-        book_list = Book.objects.all()
-        books = _get_object_paginator(request, book_list)
-
-        context = {
-            'books': books,
-            'title': 'Book',
-            'form': form
-        }
-        return render(request, 'books/book_list.html', context)
-
+        messages.warning(request, 'Insert Error')
+    return redirect(f'/{state}')
 class BookUpdateView(UpdateView):
     model = Book
     fields = '__all__'
@@ -93,26 +106,16 @@ def search_books (request):
         return  render(request,'books/book_list.html',context)        
 
 def author(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = AuthorForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            form.save()
-            name = form.cleaned_data.get('name')
-            messages.success(request, f'Author: {name} has been created!')
-            return redirect('/author')
-    else:
-        form = AuthorForm()
-        author_list = Author.objects.all()
-        authors = _get_object_paginator(request, author_list)
-        context = {
-            'authors': authors,
-            'title': 'Author',
-            'form': form
-        }
-        print(context)
-        return render(request, 'books/author_list.html', context)
+    form = AuthorForm()
+    author_list = Author.objects.all()
+    authors = _get_object_paginator(request, author_list)
+    context = {
+        'authors': authors,
+        'title': 'Author',
+        'form': form
+    }
+    print(context)
+    return render(request, 'books/author_list.html', context)
 
 def search_author (request):
     global author_keyword
@@ -137,26 +140,15 @@ def search_author (request):
 
 
 def publisher(request):
+    form = PublisherForm()
     publisher_list = Publisher.objects.all()
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = PublisherForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            form.save()
-            name = form.cleaned_data.get('name')
-            messages.success(request, f'Publisher: {name} has been created!')
-            return redirect('/publisher')
-    else:
-        form = PublisherForm()
-        publisher_list = Publisher.objects.all()
-        publishers = _get_object_paginator(request, publisher_list)
-        context = {
-            'publishers': publishers,
-            'title': 'Publisher',
-            'form': form
-        }
-        return render(request, 'books/publisher_list.html', context)
+    publishers = _get_object_paginator(request, publisher_list)
+    context = {
+        'publishers': publishers,
+        'title': 'Publisher',
+        'form': form
+    }
+    return render(request, 'books/publisher_list.html', context)
 
 def search_publisher (request):
     global publisher_keyword
