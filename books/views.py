@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import BookForm, AuthorForm, PublisherForm
 from books.models import Book, Publisher, Author
@@ -15,7 +16,7 @@ from django.views.generic import (
 
 def home(request):
     context = {
-        'title': 'Home',
+        'state': 'home',
     }
     return render(request, 'books/book_home.html', context)
 
@@ -23,10 +24,12 @@ def book(request):
     form = BookForm()
     book_list = Book.objects.all()
     books = _get_object_paginator(request, book_list)
-
+    fields_book = Book._meta.get_fields()
+    print(fields_book)
     context = {
         'books': books,
-        'title': 'Book',
+        'fields': fields_book,
+        'state': 'book',
         'form': form
     }
     return render(request, 'books/book_list.html', context)
@@ -92,7 +95,7 @@ def search_books (request):
         book_pageobj = _get_object_paginator(request, book_qs)
         context = {
             'books':book_pageobj, 
-            'title': 'Book',
+            'state': 'book',
             'form': form
         }
         return  render(request,'books/book_list.html', context)
@@ -100,7 +103,7 @@ def search_books (request):
         book_pageobj = _get_object_paginator(request, book_qs)
         context = {
             'books':book_pageobj, 
-            'title': 'Book',
+            'state': 'book',
             'form': form    
         }
         return  render(request,'books/book_list.html',context)        
@@ -111,7 +114,7 @@ def author(request):
     authors = _get_object_paginator(request, author_list)
     context = {
         'authors': authors,
-        'title': 'Author',
+        'state': 'author',
         'form': form
     }
     print(context)
@@ -126,14 +129,14 @@ def search_author (request):
         authors_filter = _get_object_paginator(request, author_keyword)
         context = {
             'authors':authors_filter,
-            'title': 'Author',
+            'state': 'author',
             'form': form
         }
     else:
         authors_filter = _get_object_paginator(request, author_keyword)
         context = {
             'authors':authors_filter, 
-            'title': 'Author',
+            'state': 'author',
             'form': form    
         }
     return  render(request,'books/author_list.html',context)
@@ -145,7 +148,7 @@ def publisher(request):
     publishers = _get_object_paginator(request, publisher_list)
     context = {
         'publishers': publishers,
-        'title': 'Publisher',
+        'state': 'publisher',
         'form': form
     }
     return render(request, 'books/publisher_list.html', context)
@@ -159,14 +162,81 @@ def search_publisher (request):
         publishers_filter = _get_object_paginator(request, publisher_keyword)
         context = {
             'publishers':publishers_filter,
-            'title': 'Publisher',
+            'state': 'publisher',
             'form': form
         }
     else:
         publishers_filter = _get_object_paginator(request, publisher_keyword)
         context = {
             'publishers':publishers_filter, 
-            'title': 'Publisher',
+            'state': 'publisher',
             'form': form    
         }
-    return  render(request,'books/publisher_list.html',context)    
+    return  render(request,'books/publisher_list.html',context)
+
+def delete(request,state,m_pk):
+    if state=="book":
+        data = Book.objects.get(isbn=m_pk)
+    elif state=="author":
+        data = Author.objects.get(author_name=m_pk)
+    elif state=="publisher":   
+        data = Publisher.objects.get(name=m_pk)
+    data.delete()
+    messages.success(request, f'Delete {state.capitalize()} Success')
+    return HttpResponseRedirect(reverse(f'books:{state}'))
+
+def edit(request,state,m_pk):
+    if state=="book":
+        if request.method == 'POST':
+            try :
+                data = Book.objects.get(isbn=m_pk)
+                data.isbn = request.POST['isbn']
+                data.title = request.POST['title']
+                data.published_date = request.POST['published_date']
+                data.publisher= Publisher.objects.get(name=request.POST['publisher'])
+                data.save()
+                messages.success(request, 'Edit Success')
+            except:
+                messages.warning(request, 'Edit Error')
+
+        fields_book = Book._meta.get_fields()[:3]
+        d_book = Book.objects.get(isbn = m_pk )
+        d_book_list = Book.objects.values_list().get(isbn = m_pk )
+        p_pk = Publisher.objects.all()
+        a_pk = Author.objects.all()
+        mylist = zip(fields_book,d_book_list)
+        context = {"state":"book","mylist":mylist,"pk":m_pk,"d_book":d_book.publisher.name,"publisher_name":p_pk,"a_name":a_pk}
+                
+    elif state=="author":
+        if request.method == 'POST':
+            try :
+                data = Author.objects.get(author_name=m_pk)
+                data.author_name = request.POST['author_name']
+                data.date_of_birth = request.POST['date_of_birth']
+                data.save()
+                messages.success(request, 'Edit Success')
+            except:
+                messages.warning(request, 'Edit Error')
+        p_pk = Publisher.objects.all()
+        d_author_list = Author.objects.values_list().get(author_name = m_pk )
+        d_author = Author.objects.get(author_name = m_pk )
+        fields_author = Author._meta.get_fields()[1:3]
+        mylist = zip(fields_author,d_author_list)
+        context = {"state":"author","mylist":mylist,"pk":m_pk,"publisher_name":p_pk}
+
+    elif state=="publisher":
+        if request.method == 'POST':
+            try :
+                data = Publisher.objects.get(name=m_pk) 
+                data.name = request.POST['name']
+                data.address=request.POST['address']
+                data.phone=request.POST['phone']
+                data.save()
+                messages.success(request, 'Edit Success')
+            except:
+                messages.warning(request, 'Edit Error')
+        d_publisher = Publisher.objects.values_list().get(name = m_pk )
+        fields_publisher = Publisher._meta.get_fields()[2:]
+        mylist = zip(fields_publisher,d_publisher)
+        context = {"state":"publisher","f_model":fields_publisher,"model_d":d_publisher,"mylist":mylist,"pk":m_pk}
+    return render(request, 'books/edit.html',context)

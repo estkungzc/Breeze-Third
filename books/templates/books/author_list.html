@@ -1,6 +1,7 @@
 {% extends "books/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+{% if user.is_authenticated %}
 <div class="content-section">
   <legend class="border-bottom mb-4">
     <a
@@ -14,7 +15,7 @@
   </legend>
   <form
     method="POST"
-    action={% url 'books:insert' 'author' %}
+    action={% url 'books:insert' state %}
     class="collapse multi-collapse"
     id="insertCollapse"
   >
@@ -27,6 +28,7 @@
     </div>
   </form>
 </div>
+{% endif %}
 <div class="content-section">
   <legend class="border-bottom mb-4">Search</legend>
   <form action="{% url 'books:search-author' %}" method="post">

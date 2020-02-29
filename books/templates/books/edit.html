@@ -1,0 +1,53 @@
+{% extends "books/base.html" %}
+{% block content %}
+        <div class="card border-0 shadow">
+          <div class="card-body p-5">
+            <h1><p class="text-center text-black-50">Edit {{state|title}}</p></h1>
+
+            <form action="{% url 'books:edit' state pk %}" method="post">
+            {% csrf_token %}
+            {% for i,n in mylist %}
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">{{i.name}}</span>
+                </div>
+                {% if i.name == 'published_date' or i.name == 'date_of_birth'%}
+                  <input type="date" class="form-control" aria-describedby="basic-addon1" name={{i.name}} value="{{n|date:"Y-m-d" }}" >
+                {% else %}
+                  <input type="text" class="form-control" aria-describedby="basic-addon1" name={{i.name}} value= {{n}} >
+                {% endif %}
+              </div>
+            {% endfor %}
+            {% if publisher_name %}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Publisher</span>
+              </div>
+              <select class="form-control" id="exampleFormControlSelect1" name="publisher">
+                {% for i in publisher_name %}
+                <option value={{i.name}}>{{i.name}}</option>
+                {% endfor %}
+                <option selected="selected">{{d_book}}</option>
+              </select>
+            </div>
+            {% endif %}
+            {% if a_name %}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Written</span>
+              </div>
+              <select class="form-control" id="exampleFormControlSelect1" name="written">
+                {% for i in a_name %}
+                <option value={{i.author_name}}>{{i.author_name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% endif %}
+            <div class="d-flex justify-content-end">
+<button type="submit"class="btn btn-primary mx-2">Edit</button><a class="btn btn-danger" href="/{{state}}" role="button">Cancel</a>
+            </div>
+            </form> 
+      
+          </div>
+        </div>
+{% endblock content %}
