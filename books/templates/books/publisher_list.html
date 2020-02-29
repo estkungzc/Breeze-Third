@@ -70,12 +70,8 @@
         <td>{{ publisher.phone}}</td>
           {% if user.is_authenticated %}
           <td>
-            <button type="button" class="btn btn-outline-primary btn-sm">
-              E
-            </button>
-            <button type="button" class="btn btn-outline-danger btn-sm">
-              D
-            </button>
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='{% url 'books:edit' state publisher.name %}'">E</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="location.href='{% url 'books:delete_data' state publisher.name %}'">D</button>
           </td>
           {% endif %}
         </tr>
