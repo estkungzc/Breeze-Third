@@ -25,7 +25,7 @@ def book(request):
     book_list = Book.objects.all()
     books = _get_object_paginator(request, book_list)
     fields_book = Book._meta.get_fields()
-    print(fields_book)
+    # print(fields_book)
     context = {
         'books': books,
         'fields': fields_book,
@@ -117,7 +117,7 @@ def author(request):
         'state': 'author',
         'form': form
     }
-    print(context)
+    # print(context)
     return render(request, 'books/author_list.html', context)
 
 def search_author (request):
