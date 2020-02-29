@@ -135,6 +135,9 @@ body {
                 <li class="list-group-item list-group-item-light"><a href="{% url 'books:book' %}">Book</a></li>
                 <li class="list-group-item list-group-item-light"><a href="{% url 'books:author' %}">Author</a></li>
                 <li class="list-group-item list-group-item-light"><a href="{% url 'books:publisher' %}">Publisher</a></li>
+                {% if user.is_authenticated %}
+                  <li class="list-group-item list-group-item-light"><a href="{% url 'books:query' %}">Query</a></li>
+                {% endif %}
               </ul>
             </p>
           </div>

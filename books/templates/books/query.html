@@ -1,0 +1,57 @@
+{% extends "books/base.html" %}
+{% block content %}
+<div class="content-section">
+<legend class="border-bottom mb-4">Query with SQL</legend>
+{% if error %}  
+<div class="alert alert-primary mx-3" role="alert">
+  {{error}}
+</div>
+{% endif %}
+  <form action="{% url 'books:query' %}" method="post">
+  {% csrf_token %}
+    <div class="container">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">SQL</span>
+        </div>
+        <textarea class="form-control" aria-label="With textarea" name="sql_code"></textarea>
+      </div>
+      <button type="submit" class="btn btn-outline-success btn-lg btn-block">Query</button>
+    </div>
+  </form>
+<br>
+{% if code %}
+<div class="alert alert-success mx-3" role="alert">
+  <h4 class="alert-heading">Query</h4>
+  <p>{{code}}</p>
+  {% if len_query %}
+  <hr>
+  <p class="mb-0">Data : {{len_query}}</p>
+  {% endif %}
+</div>
+{% endif %}
+<div class="mx-3">
+  <table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            {% for i in desc %}
+                <th scope="col">{{i.0}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in query %}
+            <tr>
+                {% for n in i %}  
+                    <td>{{n}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+
+
+
+{% endblock content %}
