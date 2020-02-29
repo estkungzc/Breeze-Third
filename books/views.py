@@ -36,6 +36,17 @@ def book(request):
         }
         return render(request, 'books/book_list.html', context)
 
+class BookUpdateView(UpdateView):
+    model = Book
+    fields = '__all__'
+
+    def form_valid(self, form):
+        clean = form.cleaned_data 
+        context = {}        
+        self.object = context.save(clean) 
+        return super(BookUpdateView, self).form_valid(form)
+
+
 def _get_object_paginator(request, obj_list):
     page = request.GET.get('page', 1)
 
@@ -49,34 +60,33 @@ def _get_object_paginator(request, obj_list):
 
 def search_books (request):
     # a = Book.written.objects.all()
-    global namekeyword
+    global book_qs
     form = BookForm()
     if request.method == 'POST':
-        try:
-            keyword_b = request.POST['name']
-            print(keyword_b)
-            keyword_y = request.POST['year']
-            namekeyword = Book.objects.filter(title__startswith = keyword_b.lower(),published_date__year = keyword_y)
-            books_filter = _get_object_paginator(request, namekeyword)
-            context = {
-                'books':books_filter, 
-                'title': 'Book',
-                'form': form
-            }
-            return  render(request,'books/book_list.html',context)
-        except:
-            namekeyword = Book.objects.filter(title__startswith = keyword_b.lower())
-            books_filter = _get_object_paginator(request, namekeyword)
-            context = {
-                'books':books_filter, 
-                'title': 'Book',
-                'form': form
-            }
-            return  render(request,'books/book_list.html',context)
-    else:
-        books_filter = _get_object_paginator(request, namekeyword)
+        book_qs = Book.objects.all().order_by('title')
+        book_name = request.POST['book_name']
+        publisher_name = request.POST['publisher_name']
+        year = request.POST['year']
+        if(book_name != '' and book_name != None):
+            # print(f'Hey i want to see book name: {book_name}')
+            book_qs = book_qs.filter(title__istartswith = book_name)
+        if(publisher_name != '' and publisher_name != None):
+            # print(f'I want to know publisher name: {publisher_name}')
+            book_qs = book_qs.filter(publisher__name__istartswith = publisher_name)
+        if(year != '' and year != None):
+            # print(f'I want to know year: {year}')
+            book_qs = book_qs.filter(published_date__year = year)
+        book_pageobj = _get_object_paginator(request, book_qs)
         context = {
-            'books':books_filter, 
+            'books':book_pageobj, 
+            'title': 'Book',
+            'form': form
+        }
+        return  render(request,'books/book_list.html', context)
+    else:
+        book_pageobj = _get_object_paginator(request, book_qs)
+        context = {
+            'books':book_pageobj, 
             'title': 'Book',
             'form': form    
         }
