@@ -10,6 +10,7 @@ urlpatterns = [
     path('book', views.book, name='book'),
     path('author', views.author, name='author'),
     path('publisher', views.publisher, name='publisher'),
+    path('query', views.query, name='query'),
     path('search-book', views.search_books, name='search-book'),
     path('search-author', views.search_author, name='search-author'),
     path('search-publisher', views.search_publisher, name='search-publisher'),

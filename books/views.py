@@ -5,6 +5,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import BookForm, AuthorForm, PublisherForm
 from books.models import Book, Publisher, Author
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+import MySQLdb
+
+db = MySQLdb.connect(host="mybookdatabase.mariadb.database.azure.com",    # your host, usually localhost
+                     user="admin_mnk@mybookdatabase",         # your username
+                     passwd="#Patt1994",  # your password
+                     db="bookdb")        # name of the data base
+cur = db.cursor()
 
 from django.views.generic import (
     ListView,
@@ -125,7 +133,7 @@ def search_author (request):
     form = AuthorForm()
     if request.method == 'POST':
         keyword_a = request.POST['name']
-        author_keyword = Author.objects.filter(author_name__startswith = keyword_a.capitalize())
+        author_keyword = Author.objects.filter(author_name__istartswith = keyword_a)
         authors_filter = _get_object_paginator(request, author_keyword)
         context = {
             'authors':authors_filter,
@@ -158,7 +166,7 @@ def search_publisher (request):
     form = PublisherForm()
     if request.method == 'POST':
         keyword_a = request.POST['name']
-        publisher_keyword = Publisher.objects.filter(name__startswith = keyword_a.capitalize())
+        publisher_keyword = Publisher.objects.filter(name__istartswith = keyword_a)
         publishers_filter = _get_object_paginator(request, publisher_keyword)
         context = {
             'publishers':publishers_filter,
@@ -240,3 +248,23 @@ def edit(request,state,m_pk):
         mylist = zip(fields_publisher,d_publisher)
         context = {"state":"publisher","f_model":fields_publisher,"model_d":d_publisher,"mylist":mylist,"pk":m_pk}
     return render(request, 'books/edit.html',context)
+
+@login_required
+def query(request):
+    try:
+        test_sql=request.POST['sql_code']
+        print(test_sql)
+    except (KeyError):
+        return render(request, 'books/query.html')
+    else:
+        try:
+            cur.execute(test_sql)
+        except:
+            context = {'code':test_sql,'error':'Query not found'}
+            return render(request, 'books/query.html',context)
+        else:
+            desc = cur.description
+            query_list = cur.fetchall()
+            print(query_list)
+            context = {'state':'query', 'query': query_list,'code':test_sql,'len_query':len(query_list),'desc':desc}
+            return render(request, 'books/query.html',context)
