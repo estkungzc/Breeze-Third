@@ -8,11 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import MySQLdb
 
-db = MySQLdb.connect(host="mybookdatabase.mariadb.database.azure.com",    # your host, usually localhost
-                     user="admin_mnk@mybookdatabase",         # your username
-                     passwd="#Patt1994",  # your password
-                     db="bookdb")        # name of the data base
-cur = db.cursor()
+
 
 from django.views.generic import (
     ListView,
@@ -252,6 +248,11 @@ def edit(request,state,m_pk):
 @login_required
 def query(request):
     if request.method == 'POST':
+        db = MySQLdb.connect(host="mybookdatabase.mariadb.database.azure.com",    # your host, usually localhost
+                            user="admin_mnk@mybookdatabase",         # your username
+                            passwd="#Patt1994",  # your password
+                            db="bookdb")        # name of the data base
+        cur = db.cursor()
         try:
             test_sql=request.POST['sql_code']
             print(test_sql)
