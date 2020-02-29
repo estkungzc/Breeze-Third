@@ -76,10 +76,8 @@
           </td>
           {% if user.is_authenticated %}
           <td>
-          <td>
             <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='{% url 'books:edit' state author.author_name %}'">E</button>
             <button type="button" class="btn btn-outline-danger btn-sm" onclick="location.href='{% url 'books:delete_data' state author.author_name %}'">D</button>
-          </td>
           </td>
           {% endif %}
         </tr>
