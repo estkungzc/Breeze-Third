@@ -251,20 +251,22 @@ def edit(request,state,m_pk):
 
 @login_required
 def query(request):
-    try:
-        test_sql=request.POST['sql_code']
-        print(test_sql)
-    except (KeyError):
-        return render(request, 'books/query.html')
-    else:
+    if request.method == 'POST':
         try:
-            cur.execute(test_sql)
-        except:
-            context = {'code':test_sql,'error':'Query not found'}
-            return render(request, 'books/query.html',context)
+            test_sql=request.POST['sql_code']
+            print(test_sql)
+        except (KeyError):
+            return render(request, 'books/query.html')
         else:
-            desc = cur.description
-            query_list = cur.fetchall()
-            print(query_list)
-            context = {'state':'query', 'query': query_list,'code':test_sql,'len_query':len(query_list),'desc':desc}
-            return render(request, 'books/query.html',context)
+            try:
+                cur.execute(test_sql)
+            except:
+                context = {'state':'query', 'code':test_sql,'error':'Query not found'}
+                return render(request, 'books/query.html',context)
+            else:
+                desc = cur.description
+                query_list = cur.fetchall()
+                print(query_list)
+                context = {'state':'query', 'query': query_list,'code':test_sql,'len_query':len(query_list),'desc':desc}
+                return render(request, 'books/query.html',context)
+    return render(request, 'books/query.html', {'state': 'query'})
