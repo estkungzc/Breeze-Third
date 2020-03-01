@@ -262,7 +262,7 @@ def query(request):
             try:
                 cur.execute(test_sql)
             except:
-                context = {'state':'query', 'code':test_sql,'error':'Query not found'}
+                context = {'state':'qury', 'code':test_sql,'error':'Query not found'}
                 return render(request, 'books/query.html',context)
             else:
                 desc = cur.description
