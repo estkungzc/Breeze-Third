@@ -95,7 +95,10 @@ def search_books (request):
             book_qs = book_qs.filter(publisher__name__istartswith = publisher_name)
         if(year != '' and year != None):
             # print(f'I want to know year: {year}')
-            book_qs = book_qs.filter(published_date__year = year)
+            try:
+                book_qs = book_qs.filter(published_date__year = year)
+            except:
+                pass
         book_pageobj = _get_object_paginator(request, book_qs)
         context = {
             'books':book_pageobj, 
